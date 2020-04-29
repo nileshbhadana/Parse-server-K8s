@@ -1,0 +1,51 @@
+namespace:
+  name: atlantest
+
+image:
+  repository: nileshbhadana/parse-server-example
+  tag: latest
+  pullPolicy: IfNotPresent
+  port: 1337
+  health_url: /parse/health
+
+livenessProbe:
+  initialDelaySeconds: 15
+  periodSeconds: 20
+
+readinessProbe:
+  initialDelaySeconds: 15
+  periodSeconds: 20
+
+service:
+  type: LoadBalancer
+  port: 80
+
+configmap: {
+  DATABASE_URI: "mongodb://mongo-mongo-db:27017/my-db",
+  SERVER_URL: "http://localhost:1337/parse",
+  APP_ID: "app_id_starter"
+}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 90
+  targetMemoryUtilizationPercentage: 90
+
+ingress:
+  enabled: false
+  annotations: {}
+  labels: {}
+  path: /
+  hosts:
+    - parse-server.abc.com
+  extraPaths: []
+  # - path: /*
+  #   backend:
+  #     serviceName: ssl-redirect
+  #     servicePort: use-annotation
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local

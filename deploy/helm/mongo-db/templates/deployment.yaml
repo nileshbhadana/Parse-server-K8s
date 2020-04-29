@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mongo-db.fullname" . }}
+  labels:
+{{ include "mongo-db.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "mongo-db.name" . }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "mongo-db.name" . }}
+    spec:
+    {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecret }}
+    {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.image.port }}
+              protocol: TCP
+          volumeMounts:
+          - name: datadir
+            mountPath: /data/db
+      volumes:
+      - name: datadir
+    {{- if .Values.storage.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ template "mongo-db.name" . }}
+    {{- else }}
+        emptyDir: {}
+    {{- end }}
