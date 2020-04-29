@@ -54,4 +54,3 @@ stage('Image Rollout'){
     sh ("kubectl rollout status deployment/parse-server -n ${NAMESPACE}")
 }
 
-}
