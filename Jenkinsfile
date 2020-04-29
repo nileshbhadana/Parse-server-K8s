@@ -1,25 +1,16 @@
 pipeline {
-properties([
-        parameters([
-        string(defaultValue: "master", description: 'Which Git Branch to clone?', name: 'GIT_BRANCH'),
-        string(defaultValue: "parseapp", description: 'Namespace for setup application', name: 'NAMESPACE'),
-        string(defaultValue: "1", description: 'pod count', name: 'replicacount'),
-        string(defaultValue: "nileshbhadana", description: 'Environment name', name: 'GIT_ORG'),
-        string(defaultValue: "Parse-server-K8s", description: 'Which Git Repo to clone?', name: 'GIT_APP_REPO'),
-        choice(name: 'action', choices: "build", description: 'choose for build and rollback')
-        ])
-])
 environment {
 registry = "nileshbhadana/parse-server"
 registryCredential = 'dockerhub_id_nilesh'
 dockerImage = ''
+NAMESPACE= "parseapp"
 }
 agent any
 stages {
 
 	stage('Cloning our Git') {
 		steps {
-			git "https://github.com/$GIT_ORG/$GIT_APP_REPO .git"
+			git "https://github.com/nileshbhadana/Parse-server-K8s.git"
 		}
 	}
 
@@ -57,7 +48,7 @@ stages {
 	stage('Deployment') {
 		steps{
     			sh "helm upgrade --install --atomic --wait --timeout 300 mongo ./deploy/helm/mongo-db/ --namespace ${NAMESPACE}"
-    			sh "helm upgrade --install --atomic --wait --timeout 300 parse-server ./deploy/helm/parse-server/ --set image.tag=${BUILD_NUMBER},replicaCount=${replicacount},image.repository=${registry}  --namespace ${NAMESPACE}"
+    			sh "helm upgrade --install --atomic --wait --timeout 300 parse-server ./deploy/helm/parse-server/ --set image.tag=${BUILD_NUMBER},image.repository=${registry}  --namespace ${NAMESPACE}"
 		}
 	}
 
