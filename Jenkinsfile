@@ -3,7 +3,7 @@ environment {
 registry = "nileshbhadana/parse-server"
 registryCredential = 'dockerhub_id_nilesh'
 dockerImage = ''
-NAMESPACE= "parseapp2"
+NAMESPACE= "parseapp"
 }
 agent any
 stages {
