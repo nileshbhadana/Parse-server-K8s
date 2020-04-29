@@ -1,6 +1,4 @@
 pipeline {
-environment {
-
 properties([
         parameters([
         string(defaultValue: "master", description: 'Which Git Branch to clone?', name: 'GIT_BRANCH'),
@@ -12,6 +10,7 @@ properties([
         ])
 ])
 
+environment {
 registry = "nileshbhadana/parse-server"
 registryCredential = 'dockerhub_id_nilesh'
 dockerImage = ''
