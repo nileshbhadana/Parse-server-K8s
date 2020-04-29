@@ -10,7 +10,7 @@ stages {
 
 	stage('helm list') {
     		steps{
-			sh "helm ls"
+			sh "kubectl get pods --namespace parseapp"
 		}
 	}
 }
