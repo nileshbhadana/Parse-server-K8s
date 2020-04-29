@@ -14,12 +14,6 @@ properties([
 registry = "${REGISTRY}/parse-server"
 registryCredential = "dockerhub_id_nilesh"
 
-node('master'){
-stage('Clone Repo'){
-      cleanWs()
-      checkout([$class: 'GitSCM', branches: [[name: '*/$GIT_BRANCH']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'git@github.com:$GIT_ORG/$GIT_APP_REPO.git']]])
-  }
-  
   stage('Build Docker Image') {
     GIT_COMMIT_ID = sh (
         script: 'git log -1 --pretty=%H',
