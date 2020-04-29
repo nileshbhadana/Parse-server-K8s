@@ -1,6 +1,5 @@
 pipeline {
-environment {
-options([
+properties([
         parameters([
         string(defaultValue: "master", description: 'Which Git Branch to clone?', name: 'GIT_BRANCH'),
         string(defaultValue: "parseapp", description: 'Namespace for setup application', name: 'NAMESPACE'),
@@ -10,7 +9,7 @@ options([
         choice(name: 'action', choices: "build", description: 'choose for build and rollback')
         ])
 ])
-
+environment {
 registry = "nileshbhadana/parse-server"
 registryCredential = 'dockerhub_id_nilesh'
 dockerImage = ''
